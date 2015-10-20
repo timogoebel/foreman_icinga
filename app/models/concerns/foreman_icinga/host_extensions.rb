@@ -8,9 +8,9 @@ module ForemanIcinga
 
     def downtime_host
       logger.debug "Setting downtime for host #{name} in Icinga"
-      return false unless configured?
+      return false unless icinga_configured?
 
-      if enabled?
+      if icinga_enabled?
         begin
           params = {
             'host' => name,
@@ -60,14 +60,14 @@ module ForemanIcinga
 
     private
 
-    def configured?
-      if enabled? && ( Setting[:icinga_address].blank? || Setting[:icinga_token].blank? )
+    def icinga_configured?
+      if icinga_enabled? && ( Setting[:icinga_address].blank? || Setting[:icinga_token].blank? )
         errors.add(:base, _("Icinga plugin is enabled but not configured. Please configure it before trying to delete a host."))
       end
       errors.empty?
     end
 
-    def enabled?
+    def icinga_enabled?
       [true, 'true'].include? Setting[:icinga_enabled]
     end
   end

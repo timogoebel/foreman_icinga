@@ -19,13 +19,7 @@ module ForemanIcinga
     end
 
     config.to_prepare do
-      if SETTINGS[:version].to_s.to_f >= 1.2
-        # Foreman 1.2
-        Host::Managed.send :include, ForemanIcinga::HostExtensions
-      else
-        # Foreman < 1.2
-        Host.send :include, ForemanIcinga::HostExtensions
-      end
+      Host::Managed.send :include, ForemanIcinga::HostExtensions
     end
   end
 end
