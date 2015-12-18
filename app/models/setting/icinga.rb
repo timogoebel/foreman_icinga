@@ -15,20 +15,20 @@ class Setting::Icinga < ::Setting
 
     Setting.transaction do
       [
-        self.set('icinga_enabled', _("Integration with Icingaweb2, enabled will set a downtime for a host when it's deleted in Foreman"), default_enabled)
-      ].compact.each { |s| self.create s.update(:category => 'Setting::Icinga')}
+        set('icinga_enabled', _("Integration with Icingaweb2, enabled will set a downtime for a host when it's deleted in Foreman"), default_enabled)
+      ].compact.each { |s| create s.update(:category => 'Setting::Icinga') }
     end
 
     Setting.transaction do
       [
-        self.set('icinga_address', _('Foreman will send Icingaweb2 requests to this address'), default_address)
-      ].compact.each { |s| self.create s.update(:category => 'Setting::Icinga')}
+        set('icinga_address', _('Foreman will send Icingaweb2 requests to this address'), default_address)
+      ].compact.each { |s| create s.update(:category => 'Setting::Icinga') }
     end
 
     Setting.transaction do
       [
-        self.set('icinga_token', _('Foreman will authenticate to icingaweb2 using this token'), default_token)
-      ].compact.each { |s| self.create s.update(:category => 'Setting::Icinga')}
+        set('icinga_token', _('Foreman will authenticate to icingaweb2 using this token'), default_token)
+      ].compact.each { |s| create s.update(:category => 'Setting::Icinga') }
     end
   end
 end

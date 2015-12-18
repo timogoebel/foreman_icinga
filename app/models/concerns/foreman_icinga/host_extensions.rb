@@ -4,65 +4,58 @@ module ForemanIcinga
     included do
       before_destroy :downtime_host
       after_build :downtime_host
+
+      has_one :icinga_status_object, :class_name => 'HostStatus::IcingaStatus', :foreign_key => 'host_id'
+
+      scoped_search :in => :icinga_status_object, :on => :status, :rename => :icinga_status,
+                    :complete_value => {
+                      :ok => HostStatus::IcingaStatus::OK,
+                      :warning => HostStatus::IcingaStatus::WARNING,
+                      :critical => HostStatus::IcingaStatus::CRITICAL,
+                      :unknown => HostStatus::IcingaStatus::UNKNOWN
+                    }
+    end
+
+    def icinga_status(options = {})
+      @icinga_status ||= get_status(HostStatus::IcingaStatus).to_status(options)
+    end
+
+    def icinga_status_label(options = {})
+      @icinga_status_label ||= get_status(HostStatus::IcingaStatus).to_label(options)
+    end
+
+    def refresh_icinga_status
+      get_status(HostStatus::IcingaStatus).refresh
     end
 
     def downtime_host
-      logger.debug "Setting downtime for host #{name} in Icinga"
+      logger.debug _('Setting downtime for host %s in Icinga') % name
       return false unless icinga_configured?
+      return true unless icinga_enabled?
 
-      if icinga_enabled?
-        begin
-          params = {
-            'host' => name,
-            'token' => Setting[:icinga_token],
-            'comment' => 'host deleted in foreman',
-            'duration' => '5400',
-            'json' => true,
-          }
-          uri = URI.parse("#{URI.join(Setting[:icinga_address], 'deployment/downtime/schedule')}?#{params.to_query}")
-          logger.debug "Sending request to icinga: #{uri}"
-          req = Net::HTTP::Post.new(uri.request_uri)
-          req['Accept']   = 'application/json'
-          req.body        = ''
+      begin
+        icinga = Icinga.new
+        params = {
+          'host' => name,
+          'comment' => 'host deleted in foreman',
+          'duration' => '7200'
+        }
+        response = icinga.call('deployment/downtime/schedule', '', params)
+        errors.add(:base, _("Error from Icinga server: '%s'") % response['message']) if response['status'] == 'error'
 
-          res             = Net::HTTP.new(uri.host, uri.port)
-          res.use_ssl     = uri.scheme == 'https'
-          if res.use_ssl?
-            if Setting[:ssl_ca_file]
-              res.ca_file = Setting[:ssl_ca_file]
-              res.verify_mode = OpenSSL::SSL::VERIFY_PEER
-            else
-              res.verify_mode = OpenSSL::SSL::VERIFY_NONE
-            end
-          end
-          response = res.start { |http| http.request(req) }
-
-          case response
-          when Net::HTTPSuccess
-              received_hash = JSON.parse(response.body)
-              logger.debug "Received response from icinga: #{received_hash.inspect}"
-
-              if received_hash['status'] == 'error'
-                errors.add(:base, _("Error from Icinga server: '#{received_hash['message']}'"))
-              else
-                # OK
-              end
-          else
-            errors.add(:base, _("Could not get valid http response from icinga server: '#{response.code} #{response.message}'"))
-          end
-
-        rescue => e
-          errors.add(:base, _("Could not set downtime for host in Icinga: #{e}"))
-        end
-        errors.empty?
+      rescue => error
+        message = _('Failed to set Icinga downtime for %s.') % name
+        errors.add(:base, message)
+        Foreman::Logging.exception(message, error)
       end
+      errors.empty?
     end
 
     private
 
     def icinga_configured?
-      if icinga_enabled? && ( Setting[:icinga_address].blank? || Setting[:icinga_token].blank? )
-        errors.add(:base, _("Icinga plugin is enabled but not configured. Please configure it before trying to delete a host."))
+      if icinga_enabled? && (Setting[:icinga_address].blank? || Setting[:icinga_token].blank?)
+        errors.add(:base, _('Icinga plugin is enabled but not configured. Please configure it before trying to delete a host.'))
       end
       errors.empty?
     end
