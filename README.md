@@ -3,15 +3,13 @@
 This is a foreman plugin to interact with icingaweb2's [deployment module](https://github.com/Thomas-Gelf/icingaweb2-module-deployment).
 At the moment it basically sets a downtime for a hosts that gets deleted in foreman.
 
+This plugin is work in progress. It should work well, but is subject to a lot of major changes. Try it, report your feedback and contribute!
+
 # Installation:
 
 **From packages**
 
-Set up the appropriate repository by following [these instructions](http://theforeman.org/manuals/1.9/index.html#3.3InstallFromPackages)
-
-RPM users can install the "ruby193-rubygem-foreman_icinga" or "rubygem-foreman_icinga" packages.
-
-Deb users can install the "ruby-foreman_icinga" package.
+RPM users can install the "tfm-rubygem-foreman_icinga" packages.
 
 **From Rubygems**
 
