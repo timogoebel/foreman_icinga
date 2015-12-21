@@ -1,7 +1,7 @@
 require 'rake'
 Gem::Specification.new do |s|
   s.name        = 'foreman_icinga'
-  s.version     = '0.0.2'
+  s.version     = '0.0.3'
   s.date        = '2015-12-21'
   s.license     = 'GPL-3.0'
   s.summary     = 'This is a foreman plugin to interact with icingaweb2 deployment module.'
