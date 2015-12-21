@@ -38,7 +38,7 @@ class Icinga
   end
 
   def ssl_ca_file
-    Setting[:ssl_ca_file]
+    Setting[:icinga_ssl_ca_file]
   end
 
   def verify_ssl?
