@@ -14,6 +14,7 @@ module HostStatus
     end
 
     def to_global(_options = {})
+      return HostStatus::Global::OK unless should_affect_global_status?
       case self.status
       when OK
         HostStatus::Global::OK
@@ -49,6 +50,10 @@ module HostStatus
 
     def host_known_in_icinga?
       true
+    end
+
+    def should_affect_global_status?
+      Setting[:icinga_affect_global_status]
     end
 
     def client
