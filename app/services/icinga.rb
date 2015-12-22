@@ -10,7 +10,7 @@ class Icinga
 
   def call(endpoint, payload = '', params = {})
     uri = icinga_url_for(endpoint, params.merge(default_params))
-    parse client(uri).post(payload)
+    parse post(uri, payload)
   rescue OpenSSL::SSL::SSLError => e
     message = "SSL Connection to Icinga failed: #{e}"
     logger.warn message
@@ -54,6 +54,10 @@ class Icinga
 
   def client(uri)
     RestClient::Resource.new(uri, connect_params)
+  end
+
+  def post(path, payload = '')
+    client(path).post(payload)
   end
 
   def parse(response)
