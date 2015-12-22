@@ -5,28 +5,20 @@ At the moment it basically sets a downtime for a hosts that gets deleted in fore
 
 This plugin is work in progress. It should work well, but is subject to a lot of major changes. Try it, report your feedback and contribute!
 
-# Installation:
+# Installation
 
-**From packages**
+See [How_to_Install_a_Plugin](http://projects.theforeman.org/projects/foreman/wiki/How_to_Install_a_Plugin)
+for how to install Foreman plugins
 
-RPM users can install the "tfm-rubygem-foreman_icinga" packages.
-
-**From Rubygems**
-
-Add to bundler.d/Gemfile.local.rb as:
-
-    gem 'foreman_icinga'
-
-then update & restart Foreman:
-
-    bundle update
-
-
-# Usage:
+# Usage
 
 Go to Administer > Settings > Icinga and set `icinga_address` with your Icingaweb2 address, `icinga_enabled` to either true or false if you want to enable or disable Icingaweb2 integration. In addition you need to set `icinga_token` to an api token specified in the Icingaweb2 deployment module settings.
 
-# Copyright:
+## Contributing
+
+Fork and send a Pull Request. Thanks!
+
+# Copyright
 Copyright 2015 FILIADATA GmbH, Germany
 
 This program is free software: you can redistribute it and/or modify

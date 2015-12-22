@@ -19,9 +19,5 @@ Style/HashSyntax:
     - ruby19
     - hash_rockets
 
-# Do not limit line length so much
-Metrics/LineLength:
-    Max: 385
-
 Metrics/MethodLength:
   Max: 20

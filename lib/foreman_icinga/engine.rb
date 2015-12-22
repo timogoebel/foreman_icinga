@@ -24,8 +24,20 @@ module ForemanIcinga
     end
 
     config.to_prepare do
-      Host::Managed.send :include, ForemanIcinga::HostExtensions
-      HostsHelper.send(:include, ForemanIcinga::HostsHelperExt)
+      begin
+        Host::Managed.send :include, ForemanIcinga::HostExtensions
+        HostsHelper.send(:include, ForemanIcinga::HostsHelperExt)
+      rescue => e
+        Rails.logger.warn "ForemanIcinga: skipping engine hook (#{e})"
+        puts e.inspect
+        puts e.backtrace
+      end
+    end
+
+    initializer 'foreman_icinga.register_gettext', after: :load_config_initializers do |_app|
+      locale_dir = File.join(File.expand_path('../../..', __FILE__), 'locale')
+      locale_domain = 'foreman_icinga'
+      Foreman::Gettext::Support.add_text_domain locale_domain, locale_dir
     end
   end
 end

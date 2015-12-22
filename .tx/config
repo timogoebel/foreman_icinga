@@ -1,0 +1,8 @@
+[main]
+host = https://www.transifex.com
+
+[foreman.foreman_icinga]
+file_filter = locale/<lang>/foreman_icinga.po
+source_file = locale/foreman_icinga.pot
+source_lang = en
+type = PO
