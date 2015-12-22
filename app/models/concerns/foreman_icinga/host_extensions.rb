@@ -41,8 +41,10 @@ module ForemanIcinga
           'duration' => '7200'
         }
         response = icinga.call('deployment/downtime/schedule', '', params)
-        errors.add(:base, _("Error from Icinga server: '%s'") % response['message']) if response['status'] == 'error'
 
+        if response['status'] == 'error'
+          errors.add(:base, _("Error from Icinga server: '%s'") % response['message'])
+        end
       rescue => error
         message = _('Failed to set Icinga downtime for %s.') % name
         errors.add(:base, message)
@@ -55,7 +57,8 @@ module ForemanIcinga
 
     def icinga_configured?
       if icinga_enabled? && (Setting[:icinga_address].blank? || Setting[:icinga_token].blank?)
-        errors.add(:base, _('Icinga plugin is enabled but not configured. Please configure it before trying to delete a host.'))
+        errors.add(:base,
+                   _('Icinga plugin is enabled but not configured. Please configure it before trying to delete a host.'))
       end
       errors.empty?
     end

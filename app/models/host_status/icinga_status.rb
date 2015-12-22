@@ -15,7 +15,7 @@ module HostStatus
 
     def to_global(_options = {})
       return HostStatus::Global::OK unless should_affect_global_status?
-      case self.status
+      case status
       when OK
         HostStatus::Global::OK
       when WARNING
@@ -32,7 +32,7 @@ module HostStatus
     end
 
     def to_label(_options = {})
-      case self.status
+      case status
       when OK
         N_('OK')
       when WARNING
@@ -61,7 +61,7 @@ module HostStatus
     end
 
     def call_icinga
-      client.call('deployment/health/check', '', {'host' => host.name})
+      client.call('deployment/health/check', '', 'host' => host.name)
     end
 
     def parse_host_status(response)

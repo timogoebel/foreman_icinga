@@ -19,5 +19,13 @@ Style/HashSyntax:
     - ruby19
     - hash_rockets
 
+# Allow longer lines
+Metrics/LineLength:
+  Max: 385
+
+# Allow larger Assignment Branch Condition size
+Metrics/AbcSize:
+    Max: 114
+
 Metrics/MethodLength:
   Max: 20

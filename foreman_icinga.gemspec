@@ -4,7 +4,9 @@ require 'date'
 Gem::Specification.new do |s|
   s.name        = 'foreman_icinga'
   s.version     = ForemanIcinga::VERSION
+  # rubocop:disable Date
   s.date        = Date.today.to_s
+  # rubocop:enable Date
   s.authors     = ['Timo Goebel']
   s.email       = ['timo.goebel@dm.de']
   s.homepage    = 'http://www.github.com/FILIADATAGmbH/foreman_icinga'

@@ -7,3 +7,4 @@ test/dummy/tmp/
 test/dummy/.sass-cache
 locale/*.mo
 locale/*/*.pox
+Gemfile.lock

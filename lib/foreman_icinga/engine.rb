@@ -9,11 +9,13 @@ module ForemanIcinga
     config.autoload_paths += Dir["#{config.root}/app/services"]
 
     initializer 'foreman_icinga.load_default_settings', :before => :load_config_initializers do |_app|
-      require_dependency File.expand_path('../../../app/models/setting/icinga.rb', __FILE__) if begin
-                                                                                                   Setting.table_exists?
-                                                                                                 rescue
-                                                                                                   (false)
-                                                                                                 end
+      if begin
+        Setting.table_exists?
+      rescue
+        false
+      end
+        require_dependency File.expand_path('../../../app/models/setting/icinga.rb', __FILE__)
+      end
     end
 
     initializer 'foreman_icinga.register_plugin', :after => :finisher_hook do |_app|
@@ -29,8 +31,6 @@ module ForemanIcinga
         HostsHelper.send(:include, ForemanIcinga::HostsHelperExt)
       rescue => e
         Rails.logger.warn "ForemanIcinga: skipping engine hook (#{e})"
-        puts e.inspect
-        puts e.backtrace
       end
     end
 
