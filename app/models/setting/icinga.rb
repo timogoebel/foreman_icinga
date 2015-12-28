@@ -13,10 +13,6 @@ class Setting
               _("Integration with Icingaweb2, enabled will set a downtime for a host when it's deleted in Foreman"),
               false),
 
-          set('icinga_affect_global_status',
-              _("Icinga status will affect a host's global status when enabled"),
-              true),
-
           set('icinga_address',
               _('Foreman will send Icingaweb2 requests to this address'),
               'https://icingahost/icingaweb2/'),
@@ -27,7 +23,15 @@ class Setting
 
           set('icinga_ssl_ca_file',
               _('SSL CA file that Foreman will use to communicate with icinga'),
-              "#{SETTINGS[:puppetssldir]}/certs/ca.pem")
+              "#{SETTINGS[:puppetssldir]}/certs/ca.pem"),
+
+          set('icinga_affect_global_status',
+              _("Icinga status will affect a host's global status when enabled"),
+              true),
+
+          set('icinga_ignore_failed_action',
+              _("Host will be deleted in Foreman even though Foreman was unable to set a downtime in Icinga"),
+              false)
         ].compact.each { |s| create! s.update(:category => 'Setting::Icinga') }
       end
     end

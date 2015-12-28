@@ -8,6 +8,8 @@ FactoryGirl.reload
 def setup_default_settings
   mock_icinga_setting :icinga_address, 'http://example.com/'
   mock_icinga_setting :icinga_token, '123456'
+  mock_icinga_setting :icinga_enabled, true
+  mock_icinga_setting :icinga_ignore_failed_action, false
 end
 
 def mock_icinga_setting(name, value)

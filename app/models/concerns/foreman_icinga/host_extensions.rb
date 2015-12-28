@@ -42,15 +42,15 @@ module ForemanIcinga
         }
         response = icinga.call('deployment/downtime/schedule', '', params)
 
-        if response['status'] == 'error'
+        if response['status'] == 'error' && ! icinga_ignore_failed_action?
           errors.add(:base, _("Error from Icinga server: '%s'") % response['message'])
         end
       rescue => error
         message = _('Failed to set Icinga downtime for %s.') % name
-        errors.add(:base, message)
+        errors.add(:base, message) unless icinga_ignore_failed_action?
         Foreman::Logging.exception(message, error)
       end
-      errors.empty?
+      icinga_ignore_failed_action? || errors.empty?
     end
 
     private
@@ -65,6 +65,10 @@ module ForemanIcinga
 
     def icinga_enabled?
       [true, 'true'].include? Setting[:icinga_enabled]
+    end
+
+    def icinga_ignore_failed_action?
+      [true, 'true'].include? Setting[:icinga_ignore_failed_action]
     end
   end
 end
