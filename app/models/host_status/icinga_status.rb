@@ -5,7 +5,7 @@ module HostStatus
     CRITICAL = 2
     UNKNOWN = 3
 
-    def relevant?
+    def relevant?(options = {})
       host_not_in_build? && host_known_in_icinga?
     end
 

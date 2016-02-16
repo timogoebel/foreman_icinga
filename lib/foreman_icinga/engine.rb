@@ -18,7 +18,7 @@ module ForemanIcinga
       end
     end
 
-    initializer 'foreman_icinga.register_plugin', :after => :finisher_hook do |_app|
+    initializer 'foreman_icinga.register_plugin', :before => :finisher_hook do |_app|
       Foreman::Plugin.register :foreman_icinga do
         requires_foreman '>= 1.10'
         register_custom_status HostStatus::IcingaStatus
