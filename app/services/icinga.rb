@@ -47,7 +47,6 @@ class Icinga
 
   def default_params
     {
-      'token' => token,
       'json'  => true
     }
   end
@@ -83,6 +82,6 @@ class Icinga
   def icinga_url_for(route, params = {})
     base = URI.join(address, route).to_s
     return base if params.empty?
-    base + '?' + params.to_query
+    base + '?' + params.to_query + '&token=' + token
   end
 end

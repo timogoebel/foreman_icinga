@@ -6,16 +6,10 @@ class IcingaTest < ActiveSupport::TestCase
     @icinga = Icinga.new
   end
 
-  test '#default_params should contain token' do
-    default_params = @icinga.send('default_params')
-    assert_kind_of Hash, default_params
-    assert_equal '123456', default_params['token']
-  end
-
   test '#icinga_url_for should return valid urls' do
-    assert_equal 'http://example.com/test/bla',
+    assert_equal 'http://example.com/test/bla&token=123456',
                  @icinga.send('icinga_url_for', 'test/bla')
-    assert_equal 'http://example.com/test/blubb?param=1',
+    assert_equal 'http://example.com/test/blubb?param=1&token=123456',
                  @icinga.send('icinga_url_for', 'test/blubb', 'param' => '1')
   end
 
