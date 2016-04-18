@@ -62,9 +62,12 @@ module HostStatus
 
     def call_icinga
       client.call('deployment/health/check', '', 'host' => host.name)
+    rescue RestClient::Unauthorized
+      nil
     end
 
     def parse_host_status(response)
+      return UNKNOWN if response.nil?
       return UNKNOWN if response.key?('status') && response['status'] == 'error'
       return UNKNOWN unless response.key?('healthy')
       if response['healthy']
