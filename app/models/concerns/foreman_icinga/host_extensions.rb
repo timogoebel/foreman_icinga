@@ -40,7 +40,7 @@ module ForemanIcinga
           'comment' => 'host deleted in foreman',
           'duration' => '7200'
         }
-        response = icinga.call('deployment/downtime/schedule', '', params)
+        response = icinga.call('deployment/downtime/schedule', {}, params)
 
         if response['status'] == 'error' && ! icinga_ignore_failed_action?
           errors.add(:base, _("Error from Icinga server: '%s'") % response['message'])

@@ -1,6 +1,7 @@
 require 'rest-client'
 
 class Icinga
+  delegate :logger, :to => :Rails
   attr_reader :client, :token, :address
 
   def initialize
@@ -8,17 +9,16 @@ class Icinga
     @token = Setting[:icinga_token]
   end
 
-  def call(endpoint, payload = '', params = {})
+  def call(endpoint, payload = {}, params = {}, method = :post)
     uri = icinga_url_for(endpoint, params.merge(default_params))
-    parse post(uri, payload)
+    result = nil
+    result = parse post(uri, payload) if method == :post
+    result = parse get(uri, payload) if method == :get
+    result
   rescue OpenSSL::SSL::SSLError => e
     message = "SSL Connection to Icinga failed: #{e}"
     logger.warn message
     error_response message
-  end
-
-  def logger
-    Rails.logger
   end
 
   protected
@@ -30,7 +30,7 @@ class Icinga
       :timeout      => 3,
       :open_timeout => 3,
       :headers      => {
-        :accept     => :json
+        :accept     => '*/*',
       },
       :verify_ssl   => verify_ssl?,
       :ssl_ca_file  => ssl_ca_file
@@ -55,8 +55,12 @@ class Icinga
     RestClient::Resource.new(uri, connect_params)
   end
 
-  def post(path, payload = '')
+  def post(path, payload = {})
     client(path).post(payload)
+  end
+
+  def get(path, payload = {})
+    client(path).get(payload)
   end
 
   def parse(response)
@@ -81,7 +85,7 @@ class Icinga
 
   def icinga_url_for(route, params = {})
     base = URI.join(address, route).to_s
-    return base if params.empty?
+    return base + "?token=" + token if params.empty?
     base + '?' + params.to_query + '&token=' + token
   end
 end

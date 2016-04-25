@@ -61,7 +61,7 @@ module HostStatus
     end
 
     def call_icinga
-      client.call('deployment/health/check', '', 'host' => host.name)
+      client.call('deployment/health/check', {}, {'host' => host.name}, :get)
     rescue RestClient::Unauthorized
       nil
     end
