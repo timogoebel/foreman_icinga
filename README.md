@@ -3,7 +3,7 @@
 This is a foreman plugin to interact with icingaweb2's [deployment module](https://github.com/Thomas-Gelf/icingaweb2-module-deployment).
 At the moment it basically sets a downtime for a hosts that gets deleted in foreman.
 
-This plugin is work in progress. It should work well, but is subject to a lot of major changes. Try it, report your feedback and contribute!
+This plugin is unmaintained and replaced by [Foreman Monitoring](https://github.com/theforeman/foreman_monitoring), which offers a lot more features and better integration.
 
 # Installation
 
